@@ -5,12 +5,25 @@ using UnityEngine.Rendering;
 
 public class Turret : MonoBehaviour
 {
+    [Header("Hidden Attributes")]
+    private Transform target;
+
+
+
+    [Header("Turret Properties")]
     public float range = 15f;
     public string enemyTag = "Enemy";
     public Transform partToRotate;
-    public float rotateSpeed = 10f;
+    public float shootRate = 1.2f;
 
-    private Transform target;
+
+    [Header("Unity Setup Fields")]
+    public float rotateSpeed = 10f;
+    private float shootCountdown = 0f;
+
+    [Header("Bullet Properties")]
+    public GameObject bulletPrefab;
+    public Transform firePoint;
 
     void Start()
     {
@@ -54,6 +67,7 @@ public class Turret : MonoBehaviour
         #region Checking For Target
         if (target == null)
             return;
+
         #endregion
 
         //Rotating Turret's heading towards target
@@ -62,11 +76,36 @@ public class Turret : MonoBehaviour
         Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * rotateSpeed).eulerAngles;
         partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f); //Rotate only on y axis
 
+
+        #region Shooting
+        if (shootCountdown <= 0f)
+        {
+            Shoot();
+            shootCountdown = 1f / shootRate;
+        }
+
+        shootCountdown -= Time.deltaTime;
+        #endregion
     }
 
+
+    void Shoot()
+    {
+        GameObject bulletGameObject = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+        Bullet bullet = bulletGameObject.GetComponent<Bullet>();
+
+        if (bullet != null)
+        {
+            bullet.Seek(target);
+        }
+    }
+
+    #region Draw Range shooting Gizmo
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, range);
     }
+    #endregion
 }

@@ -9,9 +9,11 @@ public class WaveSpawner : MonoBehaviour
     public Transform SpawnPoint;
     public TextMeshProUGUI waveCountdownText;
 
+
+
+
     private float countdown = 2f;
     private int waveIndex = 0;
-
 
 
     void Update()
