@@ -22,12 +22,6 @@ public class BuildManager : MonoBehaviour
     public GameObject standardTowerPrefab;
 
 
-    void Start()
-    {
-        towerToBuild = standardTowerPrefab;
-    }
-
-
     // Set the tower to build
     private GameObject towerToBuild;
 
@@ -36,6 +30,9 @@ public class BuildManager : MonoBehaviour
         return towerToBuild;
     }
 
-
+    public void SetTowerToBuild(GameObject tower)
+    {
+        towerToBuild = tower;
+    }
 
 }
