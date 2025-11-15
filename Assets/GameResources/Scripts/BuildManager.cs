@@ -20,7 +20,7 @@ public class BuildManager : MonoBehaviour
     #endregion
 
     public GameObject standardTowerPrefab;
-
+    public GameObject CanonPrefab;
 
     // Set the tower to build
     private GameObject towerToBuild;
