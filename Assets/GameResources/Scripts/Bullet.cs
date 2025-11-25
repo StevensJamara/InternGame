@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Json;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -8,6 +9,7 @@ public class Bullet : MonoBehaviour
 
     [Header("Bullet Attribute")]
     public float speed = 65f;
+    public float explosionRadius = 0f;
     public GameObject hitEffect;
 
 
@@ -19,7 +21,7 @@ public class Bullet : MonoBehaviour
     {
         target = _target;
     }
-    
+
 
 
     void Update()
@@ -36,25 +38,61 @@ public class Bullet : MonoBehaviour
         float distanceThisFrame = speed * Time.deltaTime; //Distance bullet will travel this frame
 
         //If bullet is close enough to hit target
-        if (bulletDir.magnitude <= distanceThisFrame) 
+        if (bulletDir.magnitude <= distanceThisFrame)
         {
             HitTarget();
             return;
         }
 
         //Move bullet towards target
-        transform.Translate(bulletDir.normalized * distanceThisFrame, Space.World); 
-
+        transform.Translate(bulletDir.normalized * distanceThisFrame, Space.World);
+        transform.LookAt(target);
         #endregion
     }
 
     private void HitTarget()
     {
         //Hit effect
-        GameObject effectHit = (GameObject) Instantiate(hitEffect, transform.position, transform.rotation);
-        Destroy(effectHit, 2f); //Destroy hit effect after 2 seconds
+        GameObject effectHit = (GameObject)Instantiate(hitEffect, transform.position, transform.rotation);
+        Destroy(effectHit, 5f); //Destroy hit effect after 2 seconds
+
+        // 
+        if (explosionRadius > 0f)
+        {
+            Explode();
+        }
+        else
+        {
+            Damage(target);
+        }
 
         //Destroy bullet
+        
         Destroy(gameObject);
     }
+
+    void Damage(Transform enemy)
+    {
+        Destroy(target.gameObject); 
+    }
+
+    #region Effect Area Damage
+    void Explode()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider collider in colliders)
+        {
+            if (collider.CompareTag("Enemy"))
+            {
+                Damage(collider.transform);
+            }
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
+    }
+    #endregion
 }

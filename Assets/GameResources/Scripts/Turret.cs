@@ -9,13 +9,11 @@ public class Turret : MonoBehaviour
     private Transform target;
 
 
-
     [Header("Turret Properties")]
-    public float range = 15f;
-    public string enemyTag = "Enemy";
+    public float range = 15f; 
     public Transform partToRotate;
     public float shootRate = 1.2f;
-
+    public string enemyTag = "Enemy";
 
     [Header("Unity Setup Fields")]
     public float rotateSpeed = 10f;
