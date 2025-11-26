@@ -6,7 +6,9 @@ public class Nodes : MonoBehaviour
     public Color hoverColor;
     public Vector3 positionOffset;
 
-    private GameObject tower;
+
+    [Header("Optional")]
+    public GameObject tower;
 
     private Renderer rend;
     private Color startColor;
@@ -23,11 +25,18 @@ public class Nodes : MonoBehaviour
         buildManager = BuildManager.instance;
     }
 
+    public Vector3 GetBuildPostion()
+    {
+        return transform.position + positionOffset; 
+    }
 
+
+
+    // Build tower on node when mouse is clicked
     private void OnMouseDown()
     {
         // If there is no tower selected to build, do nothing
-        if (buildManager.GetTowerToBuild() == null)
+        if (!buildManager.CanBuild)
         {
             return;
         }
@@ -38,11 +47,8 @@ public class Nodes : MonoBehaviour
             Debug.Log("Can't build there! - TODO: Display on screen");
             return;
         }
-        
-        GameObject towerToBuild = BuildManager.instance.GetTowerToBuild();
 
-
-        tower = (GameObject) Instantiate(towerToBuild, transform.position + positionOffset, transform.rotation);
+        buildManager.BuildTurretOn(this);
     }
 
     // Turn to hover color when mouse is over node
@@ -53,7 +59,7 @@ public class Nodes : MonoBehaviour
             return;
         }
 
-        if (buildManager.GetTowerToBuild() == null)
+        if (!buildManager.CanBuild)
         {
             return;
         }
@@ -64,7 +70,6 @@ public class Nodes : MonoBehaviour
     // Turn back to start color when mouse is no longer over node
     private void OnMouseExit()
     {
-
         rend.material.color = startColor;
     }
 }

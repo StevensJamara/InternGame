@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ShopTower : MonoBehaviour
 {
+    public TurretBlueprint standardTower;
+    public TurretBlueprint canonTower;
     BuildManager buildManager;
 
     private void Start()
@@ -9,15 +11,15 @@ public class ShopTower : MonoBehaviour
         buildManager = BuildManager.instance;
     }
 
-    public void PurchaseStandardTower()
+    public void SelectStandardTower()
     {
         Debug.Log("Standard Tower Purchased!");
-        buildManager.SetTowerToBuild(buildManager.standardTowerPrefab);
+        buildManager.SelectTurretToBuild(standardTower);
     }
 
-    public void PurchaseCanonTower()
+    public void SelectCanonTower()
     {
         Debug.Log("Canon Tower Purchased!");
-        buildManager.SetTowerToBuild(buildManager.CanonPrefab);
+        buildManager.SelectTurretToBuild(canonTower);
     }
 }

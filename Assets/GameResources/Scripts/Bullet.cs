@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization.Json;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -11,8 +7,6 @@ public class Bullet : MonoBehaviour
     public float speed = 65f;
     public float explosionRadius = 0f;
     public GameObject hitEffect;
-
-
 
 
     private Transform target;
