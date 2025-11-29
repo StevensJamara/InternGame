@@ -27,6 +27,7 @@ public class BuildManager : MonoBehaviour
 
     // Get the tower to build
     public bool CanBuild { get { return towerToBuild != null; } }
+    public bool HasMoney { get { return PlayerStats.Money >= towerToBuild.cost; } }
 
     // Build tower on node selected
     public void BuildTurretOn(Nodes node)

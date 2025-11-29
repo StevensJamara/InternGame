@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class Nodes : MonoBehaviour
 {
     public Color hoverColor;
+    public Color notEnoughMoneyColor;
     public Vector3 positionOffset;
 
 
@@ -29,8 +30,6 @@ public class Nodes : MonoBehaviour
     {
         return transform.position + positionOffset; 
     }
-
-
 
     // Build tower on node when mouse is clicked
     private void OnMouseDown()
@@ -63,7 +62,16 @@ public class Nodes : MonoBehaviour
         {
             return;
         }
-        rend.material.color = hoverColor;
+
+        // Change color based on if player has enough money to build
+        if (buildManager.HasMoney)
+        {
+            rend.material.color = hoverColor;
+        }
+        else
+        {
+            rend.material.color = notEnoughMoneyColor;
+        }
     }
 
 
