@@ -19,8 +19,14 @@ public class BuildManager : MonoBehaviour
     }
     #endregion
 
+
+    // Prefabs for towers
     public GameObject standardTowerPrefab;
     public GameObject CanonPrefab;
+
+    // Prefabs for Effects
+    public GameObject buildEffect;
+
 
     // Set the tower to build
     private TurretBlueprint towerToBuild;
@@ -44,7 +50,10 @@ public class BuildManager : MonoBehaviour
         GameObject turretBuild = (GameObject) Instantiate(towerToBuild.prefab, node.GetBuildPostion(), Quaternion.identity);
         node.tower = turretBuild;
 
-        Debug.Log("Turret built! Money left: " + PlayerStats.Money);
+        GameObject buildEff = (GameObject)Instantiate(buildEffect, node.GetBuildPostion(), Quaternion.identity);
+        Destroy(buildEff, 5f);
+
+
     }
 
 

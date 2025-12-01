@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
     public float speed = 65f;
     public float explosionRadius = 0f;
     public GameObject hitEffect;
-
+    public int DamageDeal = 10;
 
     private Transform target;
 
@@ -50,7 +50,7 @@ public class Bullet : MonoBehaviour
         GameObject effectHit = (GameObject)Instantiate(hitEffect, transform.position, transform.rotation);
         Destroy(effectHit, 5f); //Destroy hit effect after 2 seconds
 
-        // 
+        // Range damage or single target damage
         if (explosionRadius > 0f)
         {
             Explode();
@@ -61,13 +61,18 @@ public class Bullet : MonoBehaviour
         }
 
         //Destroy bullet
-        
         Destroy(gameObject);
     }
 
     void Damage(Transform enemy)
     {
-        Destroy(target.gameObject); 
+        Enemy e = enemy.GetComponent<Enemy>();
+        
+        if (e != null)
+        {
+            e.TakeDamage(DamageDeal);
+        }
+
     }
 
     #region Effect Area Damage

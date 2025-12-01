@@ -99,3 +99,4 @@ MonoBehaviour:
   speed: 50
   explosionRadius: 10
   hitEffect: {fileID: 4700276480079292938, guid: aee5322b1dfb91041942c2bbc8884d15, type: 3}
+  DamageDeal: 18
