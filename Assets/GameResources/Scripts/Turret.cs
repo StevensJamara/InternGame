@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -8,20 +9,26 @@ public class Turret : MonoBehaviour
     [Header("Hidden Attributes")]
     private Transform target;
 
-
     [Header("Turret Properties")]
     public float range = 15f; 
     public Transform partToRotate;
+
+    [Header("Tower use Bullets (default)")]
+    public GameObject bulletPrefab;
     public float shootRate = 1.2f;
-    public string enemyTag = "Enemy";
+    private float shootCountdown = 0f;
+
+    [Header("Tower use Laser (optional)")]
+    public bool useLaser = false;
+    public LineRenderer beamRenderer;
 
     [Header("Unity Setup Fields")]
     public float rotateSpeed = 10f;
-    private float shootCountdown = 0f;
-
-    [Header("Bullet Properties")]
-    public GameObject bulletPrefab;
+    public string enemyTag = "Enemy";
     public Transform firePoint;
+
+
+
 
     void Start()
     {
@@ -64,27 +71,58 @@ public class Turret : MonoBehaviour
     {
         #region Checking For Target
         if (target == null)
+        {
+            if (useLaser && beamRenderer.enabled)
+            {
+                beamRenderer.enabled = false;
+            }
             return;
+        }
 
         #endregion
 
-        //Rotating Turret's heading towards target
-        Vector3 dir = target.position - transform.position; //Direction to target
-        Quaternion lookRotation = Quaternion.LookRotation(dir); 
-        Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * rotateSpeed).eulerAngles;
-        partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f); //Rotate only on y axis
+        LockOnTarget();
+
 
 
         #region Shooting
-        if (shootCountdown <= 0f)
+        if (useLaser)
         {
-            Shoot();
-            shootCountdown = 1f / shootRate;
+            LaserBeam();
         }
+        else
+        {
+            if (shootCountdown <= 0f)
+            {
+                Shoot();
+                shootCountdown = 1f / shootRate;
+            }
 
-        shootCountdown -= Time.deltaTime;
+            shootCountdown -= Time.deltaTime;
+        }
         #endregion
     }
+
+    #region Type Bullet used of Shooting
+    void LockOnTarget()
+    {
+        //Rotating Turret's heading towards target
+        Vector3 dir = target.position - transform.position; //Direction to target
+        Quaternion lookRotation = Quaternion.LookRotation(dir);
+        Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * rotateSpeed).eulerAngles;
+        partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f); //Rotate only on y axis
+    }
+
+    void LaserBeam()
+    {
+        if(!beamRenderer.enabled)
+        {
+            beamRenderer.enabled = true;
+        }
+        beamRenderer.SetPosition(0, firePoint.position);
+        beamRenderer.SetPosition(1, target.position);
+    }
+    #endregion
 
 
     void Shoot()

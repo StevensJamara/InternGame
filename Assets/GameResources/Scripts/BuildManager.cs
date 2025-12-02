@@ -19,11 +19,6 @@ public class BuildManager : MonoBehaviour
     }
     #endregion
 
-
-    // Prefabs for towers
-    public GameObject standardTowerPrefab;
-    public GameObject CanonPrefab;
-
     // Prefabs for Effects
     public GameObject buildEffect;
 
