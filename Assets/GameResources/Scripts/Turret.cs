@@ -8,6 +8,9 @@ public class Turret : MonoBehaviour
 {
     [Header("Hidden Attributes")]
     private Transform target;
+    private Enemy targetEnemy;
+
+
 
     [Header("Turret Properties")]
     public float range = 15f; 
@@ -20,7 +23,11 @@ public class Turret : MonoBehaviour
 
     [Header("Tower use Laser (optional)")]
     public bool useLaser = false;
+    public int laserDoT = 6;
+    public float slowAmount = 0.5f;
     public LineRenderer beamRenderer;
+    public ParticleSystem beamEffect;
+    public Light beamLight;
 
     [Header("Unity Setup Fields")]
     public float rotateSpeed = 10f;
@@ -57,6 +64,7 @@ public class Turret : MonoBehaviour
         if (nearestEnemy != null && shortestDistance <= range)
         {
             target = nearestEnemy.transform; //Set target to nearest enemy
+            targetEnemy = nearestEnemy.GetComponent<Enemy>();
         }
         else
         {
@@ -75,15 +83,14 @@ public class Turret : MonoBehaviour
             if (useLaser && beamRenderer.enabled)
             {
                 beamRenderer.enabled = false;
+                beamEffect.Stop();
+                beamLight.enabled = false;
             }
             return;
         }
-
         #endregion
 
         LockOnTarget();
-
-
 
         #region Shooting
         if (useLaser)
@@ -115,12 +122,27 @@ public class Turret : MonoBehaviour
 
     void LaserBeam()
     {
-        if(!beamRenderer.enabled)
+        //Damage over time to enemy
+        //Caused Slow for enemy
+        targetEnemy.GetComponent<Enemy>().TakeDamage(laserDoT * Time.deltaTime);
+        targetEnemy.Slow(slowAmount);
+
+        #region Beam Effect
+        if (!beamRenderer.enabled)
         {
             beamRenderer.enabled = true;
+            beamEffect.Play();
+            beamLight.enabled = true;
         }
         beamRenderer.SetPosition(0, firePoint.position);
         beamRenderer.SetPosition(1, target.position);
+
+        Vector3 beamEffectDirection = firePoint.position - target.position;
+        
+        beamEffect.transform.position = target.position + beamEffectDirection.normalized * 0.5f;
+
+        beamEffect.transform.rotation = Quaternion.LookRotation(beamEffectDirection);
+        #endregion
     }
     #endregion
 
