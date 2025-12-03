@@ -2,17 +2,21 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private bool isGameOver = false;
+    public GameObject gameOverUI;
+    public static bool isGameOver;
 
-
+    private void Start()
+    {
+        isGameOver = false;
+    }
 
     void Update()
     {
         #region Win Lose Conditions
-        if (!isGameOver)
+        if (isGameOver)
             return;
 
-        if (PlayerStats.Lives <= 0)
+        if (PlayerStats.Lives <= 0 || Input.GetKey(KeyCode.I))
         {
             EndGame();   
         }
@@ -23,6 +27,6 @@ public class GameManager : MonoBehaviour
     void EndGame()
     {
         isGameOver = true;  
-        Debug.Log("Game Over!");
+        gameOverUI.SetActive(true);
     }
 }

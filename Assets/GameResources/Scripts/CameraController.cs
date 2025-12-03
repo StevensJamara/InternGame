@@ -14,6 +14,14 @@ public class CameraController : MonoBehaviour
     
     void Update()
     {
+        #region Disabled when Game Over
+        if (GameManager.isGameOver)
+        {
+            this.enabled = false;
+            return;
+        }
+
+        #endregion
         #region Enable/Disable Camera Movement
         if (Input.GetKeyDown(KeyCode.Escape))
         {

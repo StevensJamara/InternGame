@@ -22,9 +22,11 @@ public class BuildManager : MonoBehaviour
     // Prefabs for Effects
     public GameObject buildEffect;
 
-
     // Set the tower to build
     private TurretBlueprint towerToBuild;
+    private Nodes selectedNode;
+
+    public nodeUIx NodeUIx;
 
     // Get the tower to build
     public bool CanBuild { get { return towerToBuild != null; } }
@@ -50,9 +52,27 @@ public class BuildManager : MonoBehaviour
 
 
     }
+    public void SelectNodes (Nodes node)
+    {
+        if (selectedNode == node)
+        {
+            DeselectNode();
+            return;
+        }
 
+        selectedNode = node;
+        towerToBuild = null;
 
-    public void SelectTurretToBuild(TurretBlueprint turret)
+        NodeUIx.SetTarget(node);
+    }
+
+    public void DeselectNode()
+    {
+        selectedNode = null;
+        NodeUIx.Hide();
+    }
+
+    public void SelectTurretToBuild (TurretBlueprint turret)
     {
         towerToBuild = turret;
     }

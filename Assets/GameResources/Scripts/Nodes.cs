@@ -34,6 +34,11 @@ public class Nodes : MonoBehaviour
     // Build tower on node when mouse is clicked
     private void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         // If there is no tower selected to build, do nothing
         if (!buildManager.CanBuild)
         {
@@ -43,9 +48,10 @@ public class Nodes : MonoBehaviour
         // If there is already a tower at node, do nothing
         if (tower != null)
         {
-            Debug.Log("Can't build there! - TODO: Display on screen");
+            buildManager.SelectNodes(this);
             return;
         }
+
 
         buildManager.BuildTurretOn(this);
     }
