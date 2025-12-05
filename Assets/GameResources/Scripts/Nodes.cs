@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,8 +9,9 @@ public class Nodes : MonoBehaviour
     public Vector3 positionOffset;
 
 
-    [Header("Optional")]
-    public GameObject tower;
+    [HideInInspector] public GameObject tower;
+    [HideInInspector] public TurretBlueprint turretBlueprint;
+    [HideInInspector] public bool isUpgraded = false;
 
     private Renderer rend;
     private Color startColor;
@@ -53,8 +55,55 @@ public class Nodes : MonoBehaviour
         }
 
 
-        buildManager.BuildTurretOn(this);
+        BuildTower(buildManager.GetTurretToBuild());
     }
+
+    #region Build and Upgrade Tower
+    void BuildTower(TurretBlueprint blueprint)
+    {
+        if (PlayerStats.Money < blueprint.cost)
+        {
+            Debug.Log("Not enough money to build that!");
+            return;
+        }
+
+        PlayerStats.Money -= blueprint.cost;
+
+
+        GameObject _turretBuild = (GameObject)Instantiate(blueprint.prefab, GetBuildPostion(), Quaternion.identity);
+        tower = _turretBuild;
+
+        turretBlueprint = blueprint;
+
+        GameObject buildEff = (GameObject)Instantiate(buildManager.buildEffect, GetBuildPostion(), Quaternion.identity);
+        Destroy(buildEff, 5f);
+    }
+
+    public void UpgradeTower()
+    {
+        if (PlayerStats.Money < turretBlueprint.upGradeCost)
+        {
+            Debug.Log("Not enough money to build that!");
+            return;
+        }
+
+        PlayerStats.Money -= turretBlueprint.upGradeCost;
+
+        // Remove the old tower
+        Destroy(tower);
+
+
+        // Build the upgraded tower
+        GameObject _turretBuild = (GameObject)Instantiate(turretBlueprint.upGradedPrefab, GetBuildPostion(), Quaternion.identity);
+        tower = _turretBuild;
+
+        GameObject buildEff = (GameObject)Instantiate(buildManager.buildEffect, GetBuildPostion(), Quaternion.identity);
+        Destroy(buildEff, 5f);
+
+        isUpgraded = true;
+    }
+    #endregion
+
 
     // Turn to hover color when mouse is over node
     private void OnMouseEnter()
