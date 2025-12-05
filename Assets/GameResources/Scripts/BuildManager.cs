@@ -21,6 +21,8 @@ public class BuildManager : MonoBehaviour
 
     // Prefabs for Effects
     public GameObject buildEffect;
+    public GameObject sellEffect;
+
 
     // Set the tower to build
     private TurretBlueprint towerToBuild;

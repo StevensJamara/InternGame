@@ -13,4 +13,9 @@ public class TurretBlueprint
 
     public GameObject upGradedPrefab;
     public int upGradeCost;
+    
+    public int GetSellAmount()
+    {
+        return cost / 3;
+    }
 }

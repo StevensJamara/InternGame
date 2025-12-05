@@ -102,6 +102,20 @@ public class Nodes : MonoBehaviour
 
         isUpgraded = true;
     }
+
+    public void SellTower()
+    {
+        // Add money to player stats
+        PlayerStats.Money += turretBlueprint.GetSellAmount();
+
+        // Show sell effect
+        GameObject sellEff = (GameObject)Instantiate(buildManager.sellEffect, GetBuildPostion(), Quaternion.identity);
+        Destroy(sellEff, 5f);
+
+        // Remove the tower
+        Destroy(tower);
+        turretBlueprint = null;
+    }
     #endregion
 
 

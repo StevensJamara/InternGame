@@ -23,8 +23,8 @@ public class nodeUIx : MonoBehaviour
             upgradeCostText.text = target.turretBlueprint.upGradeCost + "$";
             upgradeButton.interactable = true;
 
+            sellText.text = target.turretBlueprint.GetSellAmount() + "$"; 
 
-            sellText.text = target.turretBlueprint.cost / 3 + "$"; 
         }
         else
         {
@@ -44,6 +44,13 @@ public class nodeUIx : MonoBehaviour
     public void Upgrade()
     {
         target.UpgradeTower();
+        BuildManager.instance.DeselectNode();
+    }
+
+    // Sell the tower
+    public void Sell()
+    {
+        target.SellTower();
         BuildManager.instance.DeselectNode();
     }
 }
